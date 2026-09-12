@@ -83,7 +83,49 @@ open("salida.txt", "w", encoding="utf-8").write("Primera linea\\nSegunda linea\\
   return pyodidePromise
 }
 
-const editorTheme = EditorView.theme(
+const darkEditorTheme = EditorView.theme(
+  {
+    "&": {
+      height: "100%",
+      fontSize: "14px",
+      backgroundColor: "transparent",
+    },
+    ".cm-content": {
+      fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+      padding: "14px 0",
+      caretColor: "#f5f5f7",
+    },
+    "&.cm-focused": { outline: "none" },
+    ".cm-gutters": {
+      backgroundColor: "transparent",
+      color: "#56565e",
+      border: "none",
+    },
+    ".cm-lineNumbers .cm-gutterElement": {
+      padding: "0 16px 0 4px",
+    },
+    ".cm-activeLine": { backgroundColor: "rgba(255,255,255,0.04)" },
+    ".cm-activeLineGutter": {
+      backgroundColor: "rgba(255,255,255,0.04)",
+      color: "#c9c9d2",
+    },
+    ".cm-cursor": { borderLeftColor: "#f5f5f7", borderLeftWidth: "2px" },
+    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": {
+      backgroundColor: "rgba(255,255,255,0.18) !important",
+    },
+    "&.cm-focused .cm-matchingBracket": {
+      backgroundColor: "rgba(255,255,255,0.15)",
+      outline: "1px solid rgba(255,255,255,0.25)",
+    },
+    ".cm-scroller": {
+      fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+      lineHeight: "1.7",
+    },
+  },
+  { dark: true },
+)
+
+const lightEditorTheme = EditorView.theme(
   {
     "&": {
       height: "100%",
@@ -125,16 +167,33 @@ const editorTheme = EditorView.theme(
   { dark: false },
 )
 
-const extensions = [python(), editorTheme]
+function useThemeMode() {
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false,
+  )
 
-function EditorPane({ value, onChange, disabled }) {
+  useEffect(() => {
+    const root = document.documentElement
+    const update = () => setIsDark(root.classList.contains("dark"))
+    update()
+    const obs = new MutationObserver(update)
+    obs.observe(root, { attributes: true, attributeFilter: ["class"] })
+    return () => obs.disconnect()
+  }, [])
+
+  return isDark
+}
+
+function EditorPane({ value, onChange, disabled, isDark }) {
   return (
     <div className="h-full">
       <CodeMirror
         value={value}
         height="100%"
-        theme="light"
-        extensions={extensions}
+        theme={isDark ? "dark" : "light"}
+        extensions={[python(), isDark ? darkEditorTheme : lightEditorTheme]}
         onChange={onChange}
         editable={!disabled}
         basicSetup={{
@@ -155,6 +214,7 @@ function EditorPane({ value, onChange, disabled }) {
 
 export default function Playground({ isOpen, initialCode, onClose }) {
   const { t } = useI18n()
+  const isDark = useThemeMode()
   const [code, setCode] = useState(initialCode || "")
   const [entries, setEntries] = useState([])
   const [status, setStatus] = useState("loading") // loading | ready | running
@@ -247,17 +307,15 @@ export default function Playground({ isOpen, initialCode, onClose }) {
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative flex h-[min(90vh,820px)] w-[min(96vw,1020px)] animate-scale-in flex-col overflow-hidden rounded-3xl bg-white shadow-apple-pop ring-1 ring-black/5">
+      <div className="relative flex h-[min(90vh,820px)] w-[min(96vw,1020px)] animate-scale-in flex-col overflow-hidden rounded-3xl bg-canvas shadow-apple-pop ring-1 ring-line">
         {/* Header */}
-        <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5">
+        <div className="flex items-center gap-3 border-b border-line px-5 py-3.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-apple to-apple-2 text-sm font-bold text-apple-contrast shadow-apple-soft">
             {"</>"}
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-[15px] font-semibold text-gray-900">
-              Playground
-            </h2>
-            <p className="flex items-center gap-1.5 text-[12px] text-gray-500">
+            <h2 className="text-[15px] font-semibold text-ink">Playground</h2>
+            <p className="flex items-center gap-1.5 text-[12px] text-ink-soft">
               <span
                 className={`inline-block h-1.5 w-1.5 rounded-full ${
                   ready ? "bg-emerald-500" : "animate-pulse bg-amber-500"
@@ -281,7 +339,7 @@ export default function Playground({ isOpen, initialCode, onClose }) {
           </button>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-black/5 hover:text-gray-900"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface hover:text-ink"
             aria-label={t("search_close")}
           >
             <X className="h-4.5 w-4.5" />
@@ -291,37 +349,40 @@ export default function Playground({ isOpen, initialCode, onClose }) {
         {/* Body */}
         <div className="flex min-h-0 flex-1 flex-col">
           {/* Editor */}
-          <div className="flex h-[52%] shrink-0 flex-col border-b border-black/10 bg-gray-100/70">
+          <div className="flex h-[52%] shrink-0 flex-col border-b border-line">
             <div className="flex items-center justify-between px-5 py-2">
-              <p className="font-mono text-[12px] tracking-wide text-gray-500">
+              <p className="font-mono text-[12px] tracking-wide text-ink-faint">
                 {t("pg_code")}
               </p>
               <button
                 onClick={resetCode}
-                className="flex items-center gap-1 text-[12px] text-gray-500 transition-colors hover:text-gray-900"
+                className="flex items-center gap-1 text-[12px] text-ink-faint transition-colors hover:text-ink"
               >
                 <RotateCcw className="h-3 w-3" />
                 {t("pg_reset")}
               </button>
             </div>
-            <div className="relative min-h-0 flex-1">
-              <EditorPane value={code} onChange={setCode} disabled={!ready} />
+            <div className="relative min-h-0 flex-1 rounded-xl mx-4 mb-3 overflow-hidden bg-surface ring-1 ring-line">
+              <EditorPane
+                value={code}
+                onChange={setCode}
+                disabled={!ready}
+                isDark={isDark}
+              />
               {!ready && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/90 backdrop-blur-sm">
-                  <div className="flex flex-col items-center gap-3 text-gray-600">
+                <div className="absolute inset-0 flex items-center justify-center bg-surface/90 backdrop-blur-sm">
+                  <div className="flex flex-col items-center gap-3 text-ink-soft">
                     <Loader2 className="h-7 w-7 animate-spin text-apple-2" />
-                    <p className="text-[13px]">
-                      {t("pg_loading")}
-                    </p>
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-[13px]">{t("pg_loading")}</p>
+                    <p className="text-[11px] text-ink-faint">
                       {t("pg_loading_hint")}
                     </p>
                   </div>
                 </div>
               )}
               {error && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-50/95 p-8">
-                  <p className="max-w-md text-center text-[13px] leading-relaxed text-red-700">
+                <div className="absolute inset-0 flex items-center justify-center bg-red-500/10 p-8">
+                  <p className="max-w-md text-center text-[13px] leading-relaxed text-red-600 dark:text-red-400">
                     {t("pg_error_retry")}
                   </p>
                 </div>
@@ -330,14 +391,14 @@ export default function Playground({ isOpen, initialCode, onClose }) {
           </div>
 
           {/* Console */}
-          <div className="flex min-h-0 flex-1 flex-col bg-white">
+          <div className="flex min-h-0 flex-1 flex-col">
             <div className="flex items-center justify-between px-5 py-2">
-              <p className="font-mono text-[12px] tracking-wide text-gray-500">
+              <p className="font-mono text-[12px] tracking-wide text-ink-faint">
                 {t("pg_console")}
               </p>
               <button
                 onClick={() => setEntries([])}
-                className="flex items-center gap-1 text-[12px] text-gray-500 transition-colors hover:text-gray-900"
+                className="flex items-center gap-1 text-[12px] text-ink-faint transition-colors hover:text-ink"
               >
                 <RotateCcw className="h-3 w-3" />
                 {t("pg_clear")}
@@ -348,9 +409,9 @@ export default function Playground({ isOpen, initialCode, onClose }) {
               className="min-h-0 flex-1 overflow-auto px-5 pb-4 font-mono text-[13px] leading-[1.7]"
             >
               {entries.length === 0 ? (
-                <p className="text-gray-400">
+                <p className="text-ink-faint">
                   {t("pg_empty")}{" "}
-                  <span className="text-gray-500">
+                  <span className="text-ink-soft">
                     {`print("hola mundo")`}
                   </span>
                 </p>
@@ -360,8 +421,8 @@ export default function Playground({ isOpen, initialCode, onClose }) {
                     key={i}
                     className={`whitespace-pre-wrap break-words ${
                       entry.type === "err"
-                        ? "text-red-600"
-                        : "text-gray-800"
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-ink"
                     }`}
                   >
                     {entry.text}
