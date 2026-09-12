@@ -8,6 +8,9 @@ export const translations = {
     search_placeholder: "Buscar en el manual",
     theme_label: "Cambiar tema",
     settings_label: "Preferencias",
+    install_label: "Instalar app",
+    install_ios_hint:
+      "En Safari: toca Compartir y elige «Añadir a pantalla de inicio».",
     lang_label: "Idioma",
     lang_es: "Español",
     lang_en: "English",
@@ -142,6 +145,8 @@ export const translations = {
     search_placeholder: "Search the manual",
     theme_label: "Toggle theme",
     settings_label: "Preferences",
+    install_label: "Install app",
+    install_ios_hint: "In Safari: tap Share and choose “Add to Home Screen”.",
     lang_label: "Language",
     lang_es: "Español",
     lang_en: "English",

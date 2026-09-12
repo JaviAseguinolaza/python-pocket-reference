@@ -3,6 +3,7 @@ import { Check, Moon, Palette, Search, Sun, X, Zap } from "lucide-react"
 
 import { totals } from "../data/manual"
 import { useI18n } from "../i18n/useI18n"
+import InstallButton from "./InstallButton"
 
 const ACCENT_OPTIONS = [
   { id: "graphite", value: "#8e8e93" },
@@ -87,6 +88,8 @@ export default function TopBar({
               <span className="font-sans">⌘</span>K
             </kbd>
           </button>
+
+          <InstallButton />
 
           <div className="relative" ref={settingsRef}>
             <button
