@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://javiaseguinolaza.github.io/python-pocket-reference/sitemap.xml
