@@ -1,0 +1,33 @@
+{
+  "name": "Pyke — Manual de referencia de Python",
+  "short_name": "Pyke",
+  "description": "Manual de referencia de Python en español. Busca, copia y prueba cada concepto sin instalar nada.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#1d1d1f",
+  "categories": ["education", "developer tools", "reference"],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

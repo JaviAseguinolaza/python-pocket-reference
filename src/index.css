@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Semantic tokens (flip with dark mode) */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-linestrong: var(--line-strong);
+  --color-glass: var(--glass);
+  --color-codebg: var(--code-bg);
+
+  /* Apple blue */
+  /* Acento neutral tipo Apple (grafito). Se invierte en dark mode */
+  --color-apple: var(--apple);
+  --color-apple-2: var(--apple-2);
+  --color-apple-deep: var(--apple-deep);
+  --color-apple-contrast: var(--apple-contrast);
+  --color-focus-ring: var(--focus-ring);
+
+  /* Shadows */
+  --shadow-apple-soft: var(--shadow-soft);
+  --shadow-apple-lift: var(--shadow-lift);
+  --shadow-apple-pop: var(--shadow-pop);
+
+  --radius-4xl: 2rem;
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-scale-in: scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+:root {
+  --canvas: #ffffff;
+  --surface: #f5f5f7;
+  --surface2: #e9e9ee;
+  --ink: #1d1d1f;
+  --ink-soft: #6e6e73;
+  --ink-faint: #86868b;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.16);
+  --glass: rgba(255, 255, 255, 0.78);
+  --code-bg: #1c1c22;
+  --apple: #1d1d1f;
+  --apple-2: #37373c;
+  --apple-deep: #000000;
+  --apple-contrast: #ffffff;
+  --focus-ring: #1d1d1f;
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 3px 12px rgba(0, 0, 0, 0.05);
+  --shadow-lift: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 36px rgba(0, 0, 0, 0.08);
+  --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.dark {
+  --canvas: #000000;
+  --surface: #0e0e11;
+  --surface2: #1a1a1f;
+  --ink: #f5f5f7;
+  --ink-soft: #a1a1a6;
+  --ink-faint: #86868b;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --glass: rgba(12, 12, 15, 0.76);
+  --code-bg: #16161b;
+  --apple: #f5f5f7;
+  --apple-2: #d1d1d6;
+  --apple-deep: #ffffff;
+  --apple-contrast: #1d1d1f;
+  --focus-ring: #f5f5f7;
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lift: 0 4px 12px rgba(0, 0, 0, 0.4), 0 12px 36px rgba(0, 0, 0, 0.5);
+  --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ===== Acentos configurables ===== */
+:root[data-accent="blue"] {
+  --apple: #0071e3;
+  --apple-2: #2997ff;
+  --apple-deep: #0060cc;
+  --apple-contrast: #ffffff;
+  --focus-ring: #0071e3;
+}
+.dark[data-accent="blue"] {
+  --apple: #0a84ff;
+  --apple-2: #5ac8fa;
+  --apple-deep: #2f9fff;
+  --apple-contrast: #ffffff;
+  --focus-ring: #0a84ff;
+}
+:root[data-accent="green"] {
+  --apple: #1a8f4c;
+  --apple-2: #34c759;
+  --apple-deep: #0f6a3e;
+  --apple-contrast: #ffffff;
+  --focus-ring: #1a8f4c;
+}
+.dark[data-accent="green"] {
+  --apple: #30d158;
+  --apple-2: #63e6a0;
+  --apple-deep: #1fa04e;
+  --apple-contrast: #052e16;
+  --focus-ring: #30d158;
+}
+:root[data-accent="violet"] {
+  --apple: #6d28d9;
+  --apple-2: #8b5cf6;
+  --apple-deep: #5b21b6;
+  --apple-contrast: #ffffff;
+  --focus-ring: #6d28d9;
+}
+.dark[data-accent="violet"] {
+  --apple: #bf5af2;
+  --apple-2: #d179ff;
+  --apple-deep: #a04de0;
+  --apple-contrast: #14041f;
+  --focus-ring: #bf5af2;
+}
+:root[data-accent="orange"] {
+  --apple: #d17d00;
+  --apple-2: #ff9f0a;
+  --apple-deep: #a85f00;
+  --apple-contrast: #ffffff;
+  --focus-ring: #d17d00;
+}
+.dark[data-accent="orange"] {
+  --apple: #ff9f0a;
+  --apple-2: #ffc166;
+  --apple-deep: #e58e00;
+  --apple-contrast: #291500;
+  --focus-ring: #ff9f0a;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+:root {
+  --selection: rgba(29, 29, 31, 0.14);
+}
+
+.dark {
+  --selection: rgba(245, 245, 247, 0.22);
+}
+
+/* Elegant thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+/* Focus ring, Apple style */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Scroll reveal baseline — blur + subida estilo Tesla/iOS */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  filter: blur(8px);
+  will-change: opacity, transform, filter;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.reveal-sticky {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Syntax highlighting — tono GitHub Dark */
+.hljs {
+  color: #e6edf3;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag {
+  color: #ff7b72;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute {
+  color: #a5d6ff;
+}
+.hljs-number,
+.hljs-meta .hljs-string {
+  color: #79c0ff;
+}
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.class_ {
+  color: #d2a8ff;
+}
+.hljs-built_in,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params {
+  color: #ffa657;
+}
+.hljs-operator,
+.hljs-punctuation {
+  color: #c9d1d9;
+}
+.hljs-deletion {
+  color: #ffa198;
+}
+.hljs-meta {
+  color: #79c0ff;
+}
